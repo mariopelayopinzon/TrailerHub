@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
+import Footer from './Footer.js'; // Asegúrate de que el nombre del archivo coincida
 import './App.css';
 import YouTube from 'react-youtube';
 
@@ -142,6 +143,8 @@ function App() {
           ))}
         </div>
       </div>
+
+      <Footer /> {/* Aquí se añade el Footer */}
     </div>
   );
 }
