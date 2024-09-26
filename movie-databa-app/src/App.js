@@ -1,13 +1,13 @@
 import { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
-import Footer from './Footer.js'; // Asegúrate de que el nombre del archivo coincida
+import Footer from './Footer.js';
 import './App.css';
 import YouTube from 'react-youtube';
 
-const API_URL = "https://api.themoviedb.org/3";
-const API_KEY = "daa03654964a917de586094ef0559501";
-const IMAGE_PATH = "https://image.tmdb.org/t/p/original";
-const URL_IMAGE = "https://image.tmdb.org/t/p/original";
+// Accede a las variables de entorno
+const API_URL = process.env.REACT_APP_API_URL;
+const API_KEY = process.env.REACT_APP_API_KEY;
+const IMAGE_PATH = process.env.REACT_APP_IMAGE_PATH;
 
 function App() {
   const [movies, setMovies] = useState([]);
@@ -16,7 +16,6 @@ function App() {
   const [movie, setMovie] = useState({ title: "Loading Movies" });
   const [playing, setPlaying] = useState(false);
 
-  // Función para obtener las películas, memoizada para evitar recreación innecesaria
   const fetchMovies = useCallback(async (searchKey = "") => {
     try {
       const type = searchKey ? "search" : "discover";
@@ -37,7 +36,6 @@ function App() {
     }
   }, []);
 
-  // Función para obtener los detalles de una película, incluyendo el trailer
   const fetchMovie = useCallback(async (id) => {
     try {
       const { data } = await axios.get(`${API_URL}/movie/${id}`, {
@@ -55,20 +53,17 @@ function App() {
     }
   }, []);
 
-  // Selecciona una película y carga los detalles
   const selectMovie = useCallback((movie) => {
     fetchMovie(movie.id);
     setMovie(movie);
     window.scrollTo(0, 0);
   }, [fetchMovie]);
 
-  // Maneja la búsqueda de películas
   const searchMovies = (e) => {
     e.preventDefault();
     fetchMovies(searchKey);
   };
 
-  // Efecto para cargar las películas inicialmente
   useEffect(() => {
     fetchMovies();
   }, [fetchMovies]);
@@ -133,7 +128,7 @@ function App() {
           {movies.map(movie => (
             <div key={movie.id} className="col-md-4 mb-3" onClick={() => selectMovie(movie)}>
               <img
-                src={`${URL_IMAGE + movie.poster_path}`}
+                src={`${IMAGE_PATH + movie.poster_path}`}
                 alt={movie.title}
                 height={600}
                 width="100%"
@@ -144,7 +139,7 @@ function App() {
         </div>
       </div>
 
-      <Footer /> {/* Aquí se añade el Footer */}
+      <Footer /> {/* Asegúrate de incluir tu footer aquí */}
     </div>
   );
 }
